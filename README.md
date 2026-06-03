@@ -7,7 +7,6 @@
 <img src="https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white">
 </p>
 
-<br></br>
 
 # Description
 Bleak is a simple, but powerful archival site, that can be easily self hosted. The goal of the project is to preserving almost any type of media easier on your local machine. If you want, you can also expose the instance to the outer web and let other people submit files to your archive.
@@ -21,4 +20,6 @@ cd Bleak/Bleak
 dotnet ef update
 dotnet run .
 ```
-dockerfile coming soon (?)
+dockerfile installation coming in the future (?)
+
+

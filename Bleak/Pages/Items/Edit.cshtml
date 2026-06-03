@@ -1,0 +1,40 @@
+﻿@page "/edit/{id}"
+@model Bleak.Pages.Items.EditModel
+@{
+}
+@if (Model.Item is null) return;
+
+
+<div class="flex justify-center mt-[10vh]">
+    <div class="flex flex-col gap-3 max-w-[800px] w-full border border-black/12 p-5">
+        <form method="POST" enctype="multipart/form-data" class="flex flex-col gap-3">
+            <h1 class="text-4xl underline mb-4">Edit file</h1>
+            <input class="border p-1 text-xl border-[var(--primary)] p-2" name="title" value="@Model.Item.Title" />
+            <button class="bg-[var(--primary)] text-white text-xl p-2 font-bold">Save Changes</button>
+        </form>
+        @if (Model.Verified)
+        {
+            <form method="POST" enctype="multipart/form-data"  class="flex justify-start my-2">
+                <input hidden name="delete" value="true" />
+                <button class="bg-[var(--danger)] text-white w-full text-xl p-2 font-bold">Confirm Delete Item</button>
+            </form>
+        }else
+        {
+            <form method="GET" class="flex justify-start my-2">
+                <input hidden name="Verified" value="true" />
+                <button class="bg-[var(--danger)] text-white w-full text-xl p-2 font-bold">Delete Item</button>
+            </form>
+        }
+
+        @if (Model.Message is not null)
+        {
+            <div class="p-3 border">
+                <p class="whitespace-pre-line">@Model.Message</p>
+            </div>
+        }
+
+        <a class="hover:cursor-pointer text-blue-500 mt-5" href="/items">Return to items</a>
+    </div>
+
+
+</div>

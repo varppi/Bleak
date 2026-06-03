@@ -1,0 +1,191 @@
+﻿@page
+@using System.Text;
+@using System.Text.Json;
+@using Bleak.Helpers;
+@model Bleak.Pages.Items.IndexModel
+@inject Actions _actions
+@{
+    var hadQuery = Model.SearchQuery is not null;
+    var searchQuery = Model.SearchQuery ?? "";
+    var pageNo = Model.PageNo ?? 1;
+    var type = Model.Type;
+    var resultsPerPage = 5;
+    var items = _actions.GetItems().Where(item =>
+        {
+            var text = JsonSerializer.Serialize(item);
+            if (type is not null && item.Type != Model.Type) return false;
+            return ((text + " ").Contains(searchQuery) || Encoding.Latin1.GetString(item.Data ?? []).Contains(searchQuery));
+        })
+        .OrderByDescending(item => item.Created)
+        .ToList();
+    var pagesTotal = Math.Ceiling((double)items.Count() / resultsPerPage);
+    items = items.Skip((pageNo - 1) * resultsPerPage).Take(pageNo * resultsPerPage).ToList();
+}
+<script src="/js/pdf.mjs" type="module"></script>
+<section class="my-[10vh] flex justify-center">
+    <div class="px-3 w-full">
+        <div class="flex justify-center w-full] mb-1 max-md:mb-[10vh]">
+            <div>
+                <form class="flex flex-col gap-4 w-[800px] max-w-[98vw] mb-3 max-md:mb-[5vh]">
+                    <h1 class="text-6xl underline font-bold text-center my-5">Bleak Archive</h1>
+                    <div class="flex max-md:flex-col gap-1 w-full">
+                        <input hidden name="type" value="@type" />
+                        <input hidden name="pageNo" value="@pageNo" />
+                        <input class="bg-[var(--primary)]/15 min-md:w-full p-2 font-semibold text-xl" placeholder="Biology/introduction to cyber security/bible ..." name="SearchQuery" value="@searchQuery" />
+                        <div class="flex gap-1 w-fit">
+                            <button class="font-semibold bg-[var(--primary)] min-md:w-fit w-full text-white p-2">Search</button>
+                            @if (hadQuery)
+                            {
+                                <a href="/items" class="font-semibold justify-center flex items-center text-nowrap p-2 min-md:w-fit w-full bg-[var(--danger)] text-white">Clear search</a>
+                            }
+                        </div>
+                    </div>
+
+                </form>
+
+                <a href="/items/new" class="mb-2 bg-[var(--primary)] max-w-[150px]  text-nowrap p-2 text-white text-xl flex justify-center items-center">Add to archive</a>
+
+                <div class="flex  justify-start">
+                    <div>
+                        <b class="text-center">Pages</b>
+                        <div class="flex w-full">
+                            <div class="flex max-w-[200px] w-full">
+                                @for (var i = pageNo - 3; i < pageNo + 3; i++)
+                                {
+                                    @if (i < 1 || i > pagesTotal) continue;
+                                    @if (i > pageNo)
+                                    {
+                                        <a class="bg-gray-400 p-1 max-w-full w-[30px] text-white flex justify-center items-center" href="@Web.ChangeOrAddGetParameter(Request, "pageNo", $"{i}")">@i</a>
+                                    }
+                                    else if (i == pageNo)
+                                    {
+                                        <a class="bg-gray-500 p-1 max-w-full w-[30px] text-white flex justify-center items-center" href="@Web.ChangeOrAddGetParameter(Request, "pageNo", $"{i}")">@i</a>
+                                    }
+                                    else
+                                    {
+                                        <a class="bg-gray-800 p-1 max-w-full w-[30px] text-white flex justify-center items-center" href="@Web.ChangeOrAddGetParameter(Request, "pageNo", $"{i}")">@i</a>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    
+
+        <div class="flex flex-wrap my-2 gap-3 min-xl:px-[15vw] mt-[10vh]">
+            @foreach (var item in items)
+            {
+                <div class="max-md:w-full min-md:max-w-[350px] flex flex-col gap-2 h-fit bg-black/2 border border-black/10 p-2">
+                    <p class="text-2xl uppercase font-bold underline">@item.Title</p>
+                    <p><b>ID</b> <span class="bg-black/10 p-[1px]">@item.Id</span></p>
+                    <p><b>Filename</b> <span class="bg-black/10 p-[1px]">@item.Filename</span></p>
+                    <p><b>Creator</b> <span class="bg-black/10 p-[1px]">@item.Uploader</span></p>
+                    <p><b>Type</b> <span class="bg-black/10 p-[1px]"> @(Files.IdMap[item.Type??5])</span></p>
+                    <p><b>Uploaded</b> <span class="bg-black/10 p-[1px]">@((item.Created ?? DateTime.Now).ToShortDateString())</span></p>
+                    <div class="flex w-full gap-1 my-2">
+                        <a class="bg-[var(--primary)] text-white font-semibold p-2 w-full flex justify-center items-center" href="/download/@item.Id">Download</a>
+                        @if (_actions.HasAccessToItem(User, item.Id ?? "") >= 2)
+                        {
+                            <a class="bg-[var(--warning)] p-2 font-semibold text-white w-full flex justify-center items-center" href="/edit/@item.Id">Edit</a>
+                        }
+                    </div>
+                    <div class="p-1">
+                        @if (item.Type == 1)
+                        {
+                            <div class="w-fit flex justify-center">
+                                <canvas  id="the-canvas"></canvas>
+                            </div>
+                            <div class="flex justify-center my-2">
+                                <div class="p-1 pe-2 border">
+                                    <button class="hover:cursor-pointer bg-gray-500 text-white p-2 mx-2" id="prev">Previous</button>
+                                    <button class="hover:cursor-pointer bg-gray-500 text-white p-2 mx-2" id="next">Next</button>
+                                    <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
+                                </div>
+                            </div>
+                            <script type="module">
+                                var url =  '/download/@item.Id';
+                                var { pdfjsLib } = globalThis;
+                                pdfjsLib.GlobalWorkerOptions.workerSrc = '/js/pdf.worker.mjs';
+                                var pdfDoc = null,
+                                    pageNum = 1,
+                                    pageRendering = false,
+                                    pageNumPending = null,
+                                    scale = 0.8,
+                                    canvas = document.getElementById('the-canvas'),
+                                    ctx = canvas.getContext('2d');
+                                function renderPage(num) {
+                                  pageRendering = true;
+                                  pdfDoc.getPage(num).then(function(page) {
+                                    var viewport = page.getViewport({scale: scale-.3});
+                                    canvas.height = viewport.height;
+                                    canvas.width = viewport.width;
+                                    var renderContext = {
+                                      canvasContext: ctx,
+                                      viewport: viewport
+                                    };
+                                    var renderTask = page.render(renderContext);
+                                    renderTask.promise.then(function() {
+                                      pageRendering = false;
+                                      if (pageNumPending !== null) {
+                                        renderPage(pageNumPending);
+                                        pageNumPending = null;
+                                      }
+                                    });
+                                  });
+                                  document.getElementById('page_num').textContent = num;
+                                }
+                                function queueRenderPage(num) {
+                                  if (pageRendering) {
+                                    pageNumPending = num;
+                                  } else {
+                                    renderPage(num);
+                                  }
+                                }
+                                function onPrevPage() {
+                                  if (pageNum <= 1) {
+                                    return;
+                                  }
+                                  pageNum--;
+                                  queueRenderPage(pageNum);
+                                }
+                                document.getElementById('prev').addEventListener('click', onPrevPage);
+                                function onNextPage() {
+                                  if (pageNum >= pdfDoc.numPages) {
+                                    return;
+                                  }
+                                  pageNum++;
+                                  queueRenderPage(pageNum);
+                                }
+                                document.getElementById('next').addEventListener('click', onNextPage);
+                                pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
+                                  pdfDoc = pdfDoc_;
+                                  document.getElementById('page_count').textContent = pdfDoc.numPages;
+                                  renderPage(pageNum);
+                                });
+                            </script>
+
+                        }
+                        else if (item.Type == 3)
+                        {
+                            <div class="flex justify-center w-full py-5">
+                                <audio controls>
+                                    <source src="/download/@item.Id"/>
+                                </audio>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="flex justify-center w-full">
+                                <img src="/preview/@item.Id" />
+                            </div>
+                        }
+                    </div>
+                </div>
+
+            }
+        </div>
+    </div>
+</section>

@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Bleak</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/css/global.css" asp-append-version="true" />
+    
+</head>
+<body>
+    <header class="flex border-b border-black/12 justify-evenly">
+        <div class="flex gap-3">
+            <a href="/" class="flex justify-center items-center text-[calc(10px_+_0.5vw)] p-3 border-b-3 hover:bg-[var(--primary)]/15 border-transparent hover:border-[var(--primary)] font-semibold px-5">Home</a>
+            <a href="/items" class="flex justify-center items-center text-[calc(10px_+_0.5vw)] p-3 border-b-3 hover:bg-[var(--primary)]/15 border-transparent hover:border-[var(--primary)] font-semibold px-5">Archive</a>
+        </div>
+        <div class="flex gap-3">
+            @if(!(User.Identity?.IsAuthenticated??false))
+            {
+                <a href="/account/login" class="flex justify-center items-center text-[calc(10px_+_0.5vw)] p-3 border-b-3 hover:bg-[var(--primary)]/15 border-transparent hover:border-[var(--primary)] font-semibold px-5">Login</a>
+                <a href="/account/register" class="flex justify-center items-center text-[calc(10px_+_0.5vw)] p-3 border-b-3 hover:bg-[var(--primary)]/15 border-transparent hover:border-[var(--primary)] font-semibold px-5">Register</a>            
+            }else
+            {
+                @if (User.Identity.Name == "admin")
+                {
+                    <a href="/admin" class="flex justify-center items-center text-[calc(10px_+_0.5vw)] p-3 border-b-3 hover:bg-[var(--primary)]/15 border-transparent hover:border-[var(--primary)] font-semibold px-5">Admin</a>
+                }
+                <a href="/account" class="flex justify-center items-center text-[calc(10px_+_0.5vw)] p-3 border-b-3 hover:bg-[var(--primary)]/15 border-transparent hover:border-[var(--primary)] font-semibold px-5">Account</a>
+                <a href="/account/logout" class="flex justify-center items-center text-[calc(10px_+_0.5vw)] p-3 border-b-3 hover:bg-[var(--primary)]/15 border-transparent hover:border-[var(--primary)] font-semibold px-5">Log out</a>
+            }
+            </div>
+        </div>
+    </header>
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,38 @@
+﻿@page
+@inject Actions _actions;
+@model Bleak.Pages.Admin.IndexModel
+@{
+    var masterPassword = _actions.GetConfig()?.MasterPassword;
+    var viewing = _actions.GetConfig()?.AnonymousViewing;
+}
+
+<div class="flex justify-center mt-[10vh]">
+    <div class="flex flex-col gap-3 max-w-[800px] w-full border border-black/12 p-5">
+        <form method="POST" class="flex flex-col gap-4">
+            <h1 class="text-4xl underline mb-4">Site Configuration</h1>
+            <div class="flex gap-3 text-nowrap text-xl mb-5 flex-wrap">
+                <b>Master Password (hover to reveal):</b> 
+                <p class="bg-black w-fit min-w-[50%] transition-[1s] hover:bg-[rgba(0,0,0,0)]">@(masterPassword)</p>
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <label class="text-xl font-semibold">Registration master password (optional)</label>
+                <input class="border p-1 text-xl border-[var(--primary)] p-2" name="MasterPassword" type="password" value="@masterPassword" />
+            </div>
+            <div class="flex flex-col gap-2">
+                <label class="text-xl font-semibold">Enable anonymous viewing</label>
+                <div class="flex justify-start">
+                    <input class="p-1 p-2 w-[25px] h-[25px]" name="AnonymousViewing" type="checkbox" @((viewing??false) ? "checked" : "") />
+                </div>
+            </div>
+
+            <button class="bg-[var(--primary)] text-white text-xl p-2 font-bold">Save</button>
+        </form>
+        @if (Model.Message is not null)
+        {
+            <div class="p-3 border">
+                <p class="whitespace-pre-line">@Model.Message</p>
+            </div>
+        }
+    </div>
+</div>

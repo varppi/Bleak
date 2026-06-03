@@ -1,0 +1,24 @@
+﻿@page
+@model Bleak.Pages.Account.Login.IndexModel
+@{
+}
+
+<div class="flex justify-center mt-[10vh]">
+    <form method="POST" class="flex flex-col gap-3 max-w-[800px] w-full border border-black/12 p-5">
+        <h1 class="text-4xl underline mb-4">Bleak Login</h1>
+        <input class="border p-1 text-xl border-[var(--primary)] p-2" name="UserName" placeHolder="username" />
+        <input class="border p-1 text-xl border-[var(--primary)] p-2" name="Password" placeHolder="password" type="password" />
+        <button class="bg-[var(--primary)] text-white text-xl p-2 font-bold">Login</button>
+        @if (Model.Message is not null)
+        {
+            <div class="p-3 border">
+                <p class="whitespace-pre-line">@Model.Message</p>
+            </div>
+        }
+        
+        <div class="h-[1px] bg-black/25 mt-5"></div>
+        <a class="text-blue-500 hover:cursor-pointer ms-2" href="/account/register">Create account</a>
+
+    </form>
+
+</div>

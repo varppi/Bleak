@@ -1,0 +1,16 @@
+﻿@page
+@model Bleak.Pages.Items.NewModel
+@{
+
+}
+
+<div class="flex justify-center mt-[10vh]">
+    <form method="POST" class="flex flex-col gap-3 max-w-[800px] w-full border border-black/12 p-5" enctype="multipart/form-data">
+        <h1 class="text-4xl underline mb-4">Upload file</h1>
+        <input class="border p-1 text-xl border-[var(--primary)] p-2" name="Name" placeHolder="name" />
+        @Html.ValidationMessage("name")
+        <input class="p-2 ps-2 text-xl bg-[var(--primary)]/20 border-1 border-[var(--primary)] hover:cursor-pointer font-semibold" type="file" name="Upload" />
+        @Html.ValidationMessage("upload")
+        <button class="bg-[var(--primary)] text-white text-xl p-2 font-bold">Upload</button>
+    </form>
+</div>

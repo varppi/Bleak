@@ -1,0 +1,76 @@
+﻿@page
+@model IndexModel
+@inject Actions _actions
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<section class="flex justify-center w-full mt-[10vh] px-2 border-b-2 pb-[30vh] border-dotted mb-[5vh]">
+    <div class="w-full max-w-[1000px] p-3 pb-[5vh] p-3">
+        <h1 class="font-bold text-7xl my-[3vh] mb-[4vh] underline text-center">Bleak archive</h1>
+        @if (!_actions.UserExists("admin"))
+        {
+
+            <div class="flex justify-center">
+                <form method="POST" class="flex flex-col gap-3 max-w-[800px] w-full border border-black/12 p-5">
+                    <h1 class="text-4xl underline mb-4">Create Admin Account</h1>
+                    <b>Username: Admin</b>
+                    <input hidden name="UserName" value="admin"/> 
+                    <input class="border p-1 text-xl border-[var(--primary)] p-2" name="Password" placeHolder="password" type="password" />
+                    <button class="bg-[var(--primary)] text-white text-xl p-2 font-bold">Create Account</button>
+                    @if (Model.Message is not null)
+                    {
+                        <div class="p-3 border">
+                            <p class="whitespace-pre-line">@Model.Message</p>
+                        </div>
+                    }
+
+                </form>
+
+            </div>
+        }else
+        {
+            <div class="flex justify-center mb-1">
+                <div class="flex flex-wrap my-3 gap-[10px] p-3 text-white introboxes">
+                    <a class="max-h-full max-w-full w-[calc(75px_+_5vw)] h-[100px] flex justify-center
+                                items-center"
+                        href="/items?Type=0">
+                        <b class="text-2xl">Texts</b>
+                    </a>
+                    <a class="max-h-full max-w-full w-[calc(75px_+_5vw)] h-[100px] flex justify-center
+                                items-center"
+                       href="/items?Type=1">
+                        <b class="text-2xl">Books</b>
+                    </a>
+                    <a class="max-h-full max-w-full w-[calc(75px_+_5vw)] h-[100px] flex justify-center
+                                items-center"
+                       href="/items?Type=3">
+                        <b class="text-2xl">Audio</b>
+                    </a>
+                    <a class="max-h-full max-w-full w-[calc(75px_+_5vw)] h-[100px] flex justify-center
+                                items-center"
+                       href="/items?Type=4">
+                        <b class="text-2xl">Images</b>
+                    </a>
+                </div>
+            </div>
+            <div class="flex justify-center gap-3 text-2xl mb-5">
+                <p><b>@_actions.GetItems().Count()</b> Files</p>
+                <p><b>@(_actions.GetItems().Select(item => item.Data.Length).Sum() / 1024 / 1000) MB</b> Total data</p>
+            </div>
+        }
+    </div>
+</section>
+<section class="flex flex-col px-3 pb-[10vh]">
+    <div class="flex flex-col gap-5 min-md:ms-[10vw] max-w-[800px]">
+        <h2 class="text-4xl font-bold underline">What this is all about</h2>
+        <p class="text-xl/9">
+            <b>Free the information!</b> This website is a <b>FOSS</b> public project, 
+            which means, anyone anywhere can set up their own Bleak archive instance and 
+            upload their own files/books/whatever they want and make it public for the whole world 
+            to see. To see what this specific instance has to offer, take a look at:
+        </p>
+        <a  href="/items"
+            class="bg-[var(--primary)] text-center p-3 font-semibold text-white w-full text-xl">Browse the whole archive</a>
+    </div>
+</section>

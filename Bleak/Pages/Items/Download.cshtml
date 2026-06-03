@@ -1,0 +1,13 @@
+﻿@page "/download/{id}"
+@model Bleak.Pages.Items.DownloadModel
+@inject Actions _actions
+@{
+}
+
+@if (Model.Item is null)
+{
+    <p>not found</p>
+    return;
+}
+
+<p>ID: @Model.Item.Id</p>
