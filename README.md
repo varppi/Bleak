@@ -11,8 +11,6 @@
 # Description
 Bleak is a simple, but powerful archival site, that can be easily self hosted. The goal of the project is to preserving almost any type of media easier on your local machine. If you want, you can also expose the instance to the outer web and let other people submit files to your archive.
 
-<br></br>
-
 # Installation and configuration
 ```
 git clone https://github.com/varppi/Bleak
@@ -22,4 +20,13 @@ dotnet run .
 ```
 dockerfile installation coming in the future (?)
 
+# Screenshots
+### Front page
+<img width="1919" height="944" alt="image" src="https://github.com/user-attachments/assets/8423a937-bb3c-4b8e-aa0b-6f7714b7da20" />
+
+### Archive browsing page
+<img width="1604" height="946" alt="image" src="https://github.com/user-attachments/assets/d959dcb6-f8b5-40cc-a24b-393d9f262dab" />
+
+### Admin panel / site config
+<img width="1918" height="941" alt="image" src="https://github.com/user-attachments/assets/ae709185-d15b-4e9a-892d-923725806181" />
 
