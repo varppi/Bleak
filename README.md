@@ -9,7 +9,7 @@
 
 
 # Description
-Bleak is a simple, but powerful archival site, that can be easily self hosted. The goal of the project is to preserving almost any type of media easier on your local machine. If you want, you can also expose the instance to the outer web and let other people submit files to your archive.
+<b>Bleak is a simple, but powerful archival site, that can be easily self hosted. The goal of the project is to preserving almost any type of media easier on your local machine. If you want, you can also expose the instance to the outer web and let other people submit files to your archive.</b>
 
 # Installation and configuration
 ```
