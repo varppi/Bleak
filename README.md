@@ -1,4 +1,5 @@
-<img width="1400" height="330" src="https://github.com/user-attachments/assets/d109e7a1-d6f7-4503-a838-50038defe9d3" />
+<img width="1200" height="400"  src="https://github.com/user-attachments/assets/eb66bd40-1702-4a91-95a6-0a958bcfa6dc" />
+
 <p align="center" >
 <img src="https://img.shields.io/badge/C%23-5C2D91?style=for-the-badge&logo=.net&logoColor=white">
 <img src="https://img.shields.io/badge/ASP.NET-1000?style=for-the-badge&logoColor=ffffff&labelColor=ae26b9&color=ae26b9">
